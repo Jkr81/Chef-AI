@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#F7F1E8">
 <title>Chef AI — Prototype</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500..800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -36,6 +37,7 @@ h1,h2,h3{font-family:var(--serif);font-weight:700;letter-spacing:-.01em}
 .topbar h2{font-size:26px;flex:1}
 .iconbtn{width:38px;height:38px;border-radius:50%;background:var(--paper);border:1px solid var(--line);display:grid;place-items:center;font-size:18px}
 .label{font-size:12px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--ink2);margin:18px 0 8px}
+.btn *{pointer-events:none}
 .btn{display:flex;align-items:center;justify-content:center;gap:8px;height:54px;border-radius:16px;background:var(--tomato);color:#fff;font-weight:700;font-size:17px;width:100%;transition:transform .1s, background .2s}
 .btn:active{transform:scale(.98)}
 .btn.ghost{background:var(--paper);color:var(--ink);border:1.5px solid var(--ink)}
@@ -62,7 +64,7 @@ h1,h2,h3{font-family:var(--serif);font-weight:700;letter-spacing:-.01em}
 .hero-card h3{font-size:22px;line-height:1.2;max-width:220px}
 .hero-card p{font-size:13px;opacity:.75;margin:8px 0 16px;max-width:220px;line-height:1.4}
 .hero-card .btn{width:auto;padding:0 20px;height:46px;font-size:15px;display:inline-flex}
-.hero-card .pot{position:absolute;right:-10px;bottom:-12px;font-size:96px;transform:rotate(-8deg)}
+.hero-card .pot{pointer-events:none;position:absolute;right:-10px;bottom:-12px;font-size:96px;transform:rotate(-8deg)}
 .hscroll{display:flex;gap:12px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none;margin:0 -22px;padding-left:22px;padding-right:22px}
 .hscroll::-webkit-scrollbar{display:none}
 .meal{flex:0 0 132px;border-radius:16px;background:var(--paper);border:1px solid var(--line);overflow:hidden}
@@ -194,7 +196,7 @@ h1,h2,h3{font-family:var(--serif);font-weight:700;letter-spacing:-.01em}
 .composer input{flex:1;height:46px;border-radius:999px;border:1.5px solid var(--line);background:var(--paper);padding:0 16px;font:inherit;font-size:14px}
 .composer button{width:46px;height:46px;border-radius:50%;background:var(--tomato);color:#fff;font-size:18px}
 
-.toast{position:absolute;left:50%;bottom:40px;transform:translate(-50%,20px);background:var(--ink);color:#fff;padding:12px 18px;border-radius:14px;font-size:14px;font-weight:600;opacity:0;transition:all .3s;z-index:60;white-space:nowrap}
+.toast{pointer-events:none;position:absolute;left:50%;bottom:40px;transform:translate(-50%,20px);background:var(--ink);color:#fff;padding:12px 18px;border-radius:14px;font-size:14px;font-weight:600;opacity:0;transition:all .3s;z-index:60;white-space:nowrap}
 .toast.show{opacity:1;transform:translate(-50%,0)}
 
 /* demo mode */
@@ -217,9 +219,26 @@ body.demo .phone{transform:scale(1.12)}
 .progress i{height:5px;flex:1;border-radius:3px;background:#4A3F38;transition:background .3s}
 .progress i.on{background:#F0996B}
 .side .team{margin-top:40px;font-size:16px;color:#A89A8B}
-body:not(.demo) .hintbar{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);color:#CDBFB0;font-size:13px}
-body.demo .hintbar{display:none}
-.hintbar a{color:#F0996B}
+
+.phone{transform:scale(var(--fit,1));transform-origin:center}
+body.demo .phone{transform:scale(var(--fitdemo,1.12))}
+@media (max-width:540px){
+  html,body{height:100%;background:var(--cream)}
+  body{display:block;min-height:100dvh;overflow:hidden}
+  .phone{width:100vw;height:100dvh;border-radius:0;padding:0;box-shadow:none;background:var(--cream);transform:none!important}
+  .screen-wrap{border-radius:0}
+  .notch,.status{display:none}
+  .screen{padding-top:calc(env(safe-area-inset-top) + 18px);padding-bottom:calc(env(safe-area-inset-bottom) + 20px)}
+  #scan{padding:0}
+  .scan-top{top:calc(env(safe-area-inset-top) + 14px)}
+  .scan-hint{top:calc(env(safe-area-inset-top) + 62px)}
+  .scan-bottom{padding-bottom:calc(env(safe-area-inset-bottom) + 24px)}
+  .composer{padding-bottom:calc(env(safe-area-inset-bottom) + 12px)}
+  .sticky{bottom:calc(-1 * (env(safe-area-inset-bottom) + 20px))}
+  .side,.cursor{display:none!important}
+  .ing-input{font-size:16px}
+  .composer input{font-size:16px}
+}
 </style>
 </head>
 <body>
@@ -402,10 +421,13 @@ body.demo .hintbar{display:none}
   <p class="team">Josh R · Josh Y · Avery</p>
 </div>
 <div class="cursor" id="cursor"></div>
-<p class="hintbar">Clickable prototype. Tap through it, or <a href="#demo" onclick="if(current==='splash'){demo();return false}setTimeout(()=>location.reload(),50)">watch the auto demo</a>.</p>
 
 <script>
 const $ = s => document.querySelector(s);
+function fit(){ const h=innerHeight, w=innerWidth; const f=Math.min(1,(h-40)/844);
+  document.documentElement.style.setProperty('--fit',f);
+  document.documentElement.style.setProperty('--fitdemo',Math.min(1.12,(h-40)/844, (w-640)/390)); }
+addEventListener('resize',fit); fit();
 const $$ = s => [...document.querySelectorAll(s)];
 const order = ['splash','home','generate','scan','verify','brew','recipe','chat'];
 let current = 'splash';
