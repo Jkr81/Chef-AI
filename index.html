@@ -32,7 +32,7 @@
       <button class="btn" data-go="home" id="startBtn">Start</button>
     </section>
 
-    <!-- 2. HOME / MAIN PAGE -->
+   <!-- 2. HOME / MAIN PAGE -->
     <section class="screen" id="home">
       <p class="hello">Good evening</p>
       <h1 class="home-h">Welcome back, Josh</h1>
@@ -42,7 +42,13 @@
         <button class="btn" data-go="generate" id="genMealBtn">＋ Generate Meal</button>
         <div class="pot">🍲</div>
       </div>
-      <p class="label">Past meals</p>
+      <div class="label-row">
+        <p class="label" style="margin:0">Past meals</p>
+        <div class="scroll-arrows">
+          <button class="arr-btn" id="pastLeft" aria-label="Scroll left">‹</button>
+          <button class="arr-btn" id="pastRight" aria-label="Scroll right">›</button>
+        </div>
+      </div>
       <div class="hscroll" id="pastMeals">
         <div class="meal"><div class="ph" style="background:#F3E1C7">🌮</div><div class="t">Street Tacos<small>Anthony Bourdain style</small></div></div>
         <div class="meal"><div class="ph" style="background:#E4EDDD">🥗</div><div class="t">Grain Bowl<small>Quick · 20 min</small></div></div>

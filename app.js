@@ -276,4 +276,10 @@ async function demo(){
   await sleep(1500);
   window.__demoDone=true;
 }
+
+
 if(location.hash==='#demo' || new URLSearchParams(location.search).has('demo')) window.addEventListener('load',()=>setTimeout(demo,300));
+
+/* Past meals horizontal scroll buttons */
+qs('#pastLeft').onclick = () => qs('#pastMeals').scrollBy({ left: -150, behavior: 'smooth' });
+qs('#pastRight').onclick = () => qs('#pastMeals').scrollBy({ left: 150, behavior: 'smooth' });
